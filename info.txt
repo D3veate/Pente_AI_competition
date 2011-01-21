@@ -1,0 +1,3 @@
+./dummy.out
+./dummy.out
+visual
