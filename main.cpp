@@ -99,6 +99,13 @@ int main(int argc, char** argv){
     if( visual_flag){
 	dup2( stdout_restore, STDOUT_FILENO); //Restore the stdout stream. Again, parent process only. 
 	the_board.display();
+
+	if( winner == WHITE){
+	    cout << "The winner is " << program_one << endl;
+	}
+	else{
+	    cout << "The winner is " << program_two << endl;
+	}
     }
 
     //TODO: Make sure that the child processes have executed here. Terminate them if necessary. 

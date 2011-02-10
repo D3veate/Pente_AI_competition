@@ -1,5 +1,4 @@
 #include "board.h"
-//#include "header.h"
 
 Board::Board()
       :moves_made(0), turn(WHITE), game_over(false), winner(EMPTY), white_captures(0), black_captures(0){
