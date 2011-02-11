@@ -38,6 +38,8 @@ int main(int argc, char** argv){
     infile >> program_one >> program_two >> visual;
     infile.close();
 
+    cerr << program_one << " : " << program_two << endl;
+
     bool visual_flag; //Used to determine whether to show each move.//
     visual_flag = (strcmp( visual.c_str(), "visual") == 0) ? true : false;
 
@@ -210,7 +212,7 @@ Move wait_for_move( int& last_com, int read_filedes){
 	to_return.y += buffer[6] - '0';
     }
     else{
-	cerr << "Missed communication." << endl;
+	cerr << "Missed communication.(2)" << endl;
 	cerr << "Last com: " << last_com << " : " << buffer << endl;
 	exit(-1);
     }
