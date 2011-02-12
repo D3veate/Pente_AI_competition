@@ -11,7 +11,7 @@ using namespace std;
 class Board{
     private:
 	int** spot; //19 x 19
-	vector<Move> moves;
+	vector<Move_t> moves;
 
 	int moves_made;
 	int turn;
@@ -22,7 +22,7 @@ class Board{
 
 	bool is_game_over_helper();
 	void clear_board_helper();
-	void perform_captures_helper(player, Move);
+	void perform_captures_helper(player, Move_t);
 
     public:
 	Board();
@@ -35,10 +35,10 @@ class Board{
 
 	void display( bool = false);
 
-	bool move_is_legal(player, Move);
-	bool make_move(player, Move); //returns true if move is made, false if move is illegal
+	bool move_is_legal(player, Move_t);
+	bool make_move(player, Move_t); //returns true if move is made, false if move is illegal
 
-	player get_spot(Move);
+	player get_spot(Move_t);
 	int get_moves_made();
 	int get_turn();
 	bool get_game_over();
@@ -47,7 +47,7 @@ class Board{
 	int get_black_captures();
 
 	player get_player();
-	Move get_move(int);
+	Move_t get_move(int);
 };
 
 #endif

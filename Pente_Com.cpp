@@ -24,7 +24,7 @@ player Pente_Com::get_color(){
     return color;
 }
 
-void Pente_Com::play_move( Move move_to_play){ //incomplete
+void Pente_Com::play_move( Move_t move_to_play){ //incomplete
     /* the buffer[8] format is: NNNXXYY'\0' where NNN is the nth communication
      * XX is the x coords, YY is the y coords */
     char buffer[8];
@@ -42,8 +42,8 @@ void Pente_Com::play_move( Move move_to_play){ //incomplete
     write( STDOUT_FILENO, buffer, sizeof(buffer));
 }
 
-Move Pente_Com::get_opponents_move(){ //incomplete
-    Move to_return;
+Move_t Pente_Com::get_opponents_move(){ //incomplete
+    Move_t to_return;
     to_return.x = 0;
     to_return.y = 0;
     int temp_read = 0;

@@ -8,8 +8,8 @@ using namespace std;
 
 player parent_process(Board&, int[], int[], int[], int[], bool, int);
 void child_process(const char*, int[], int[]);
-Move wait_for_move( int&, int);
-void send_move( int&, int, Move);
+Move_t wait_for_move( int&, int);
+void send_move( int&, int, Move_t);
 
 int main(int argc, char** argv){
     /*vars*/
@@ -118,7 +118,7 @@ int main(int argc, char** argv){
 player parent_process(Board& the_board, int out_child_one[], int in_child_one[], int out_child_two[], int in_child_two[], bool visual_flag, int stdout_restore){
     /* Keep track of how many communications have been sent/received to detect communication errors.*/
     int read_one = 0, read_two = 0, sent_one = 0, sent_two = 0;
-    Move temp;
+    Move_t temp;
 
 //    sleep(1); //Encourage the child processes to both start. This ought ot only be a problem if an energetic
 	      //multi-core system got ahead of itself. I hope. 
@@ -187,9 +187,9 @@ void child_process(const char* file_name, int out_filedes[2], int in_filedes[2])
     }
 }
 
-Move wait_for_move( int& last_com, int read_filedes){
+Move_t wait_for_move( int& last_com, int read_filedes){
     int read_temp = 0;
-    Move to_return;
+    Move_t to_return;
     char buffer[8];
 
     do{
@@ -220,7 +220,7 @@ Move wait_for_move( int& last_com, int read_filedes){
     return to_return;
 }
 
-void send_move( int& last_sent, int write_filedes, Move move_to_send){
+void send_move( int& last_sent, int write_filedes, Move_t move_to_send){
     char buffer[8];
     last_sent++;
 

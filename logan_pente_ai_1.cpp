@@ -11,7 +11,7 @@ int main(){
     Board the_board;
     player my_color;
     player op_color;
-    Move temp;
+    Move_t temp;
     Pente_Com pente_com;
 
     srand( time(NULL));

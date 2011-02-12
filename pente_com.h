@@ -13,8 +13,8 @@ class Pente_Com{
 	~Pente_Com();
 
 	player get_color();
-	void play_move( Move);
-	Move get_opponents_move();
+	void play_move( Move_t);
+	Move_t get_opponents_move();
     protected:
 
     private:

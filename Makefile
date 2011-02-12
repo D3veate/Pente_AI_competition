@@ -1,6 +1,6 @@
 version=1
 CC=g++
-CFLAGS=-g
+CFLAGS=-g -Wall
 
 all: pente.out test.out dummy.out logan_pente_ai_$(version).out
 

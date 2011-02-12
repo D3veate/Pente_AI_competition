@@ -11,9 +11,9 @@ enum{
     WHITE = 1
 };
 
-typedef struct Move{
+typedef struct Move_t{
     int x;
     int y;
-}Move;
+}Move_t;
 
 #endif

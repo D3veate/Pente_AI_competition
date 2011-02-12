@@ -96,7 +96,7 @@ Board Board::operator--(int dummy){
  * the value of errstream
  */
 void Board::display(bool errstream){
-    Move temp;
+    Move_t temp;
 
     if( errstream == false){
 	cout << "    ";
@@ -324,7 +324,7 @@ void Board::clear_board_helper(){ //DOES NOT CLEAR moves_x/y
     black_captures = 0;
 }
 
-void Board::perform_captures_helper(player the_player, Move a){
+void Board::perform_captures_helper(player the_player, Move_t a){
   //This should only be called from make_move() and the legality is checked there first
     int x = a.x;
     int y = a.y;
@@ -350,7 +350,7 @@ void Board::perform_captures_helper(player the_player, Move a){
     }
 }
 
-bool Board::move_is_legal(player the_player, Move a){
+bool Board::move_is_legal(player the_player, Move_t a){
     bool to_return;
     int x = a.x;
     int y = a.y;
@@ -381,7 +381,7 @@ bool Board::move_is_legal(player the_player, Move a){
     return to_return;
 }
 
-bool Board::make_move(player the_player, Move a){
+bool Board::make_move(player the_player, Move_t a){
 
     if( move_is_legal( the_player, a)){
 	int x = a.x;
@@ -413,7 +413,7 @@ int Board::get_turn(){
     return turn;
 }
 
-player Board::get_spot(Move move_to_check){
+player Board::get_spot(Move_t move_to_check){
     return spot[ move_to_check.x][ move_to_check.y];
 }
 
@@ -451,7 +451,7 @@ player Board::get_player(){
     }
 }
 
-Move Board::get_move(int n){
+Move_t Board::get_move(int n){
     if( n < moves_made){
 	return moves[n];
     }

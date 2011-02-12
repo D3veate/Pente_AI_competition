@@ -5,7 +5,7 @@ Pente_AI::Pente_AI(){
 
 void Pente_AI::search_rectangle(Board& the_board, int& left, int& right, int& top, int& bottom){
     left = 9, right = 9, top = 9, bottom = 9;
-    Move temp_move;
+    Move_t temp_move;
 
     for( int i = 0 ; i < the_board.get_moves_made() ; i++){
 	temp_move = the_board.get_move( i);
@@ -22,8 +22,8 @@ void Pente_AI::search_rectangle(Board& the_board, int& left, int& right, int& to
     top = top > 14 ? 18 : top + 4;
 }
 
-Move Pente_AI::random_ai(Board& the_board){
-    Move to_return;
+Move_t Pente_AI::random_ai(Board& the_board){
+    Move_t to_return;
     player the_player = the_board.get_player();
 
     do{
@@ -34,8 +34,8 @@ Move Pente_AI::random_ai(Board& the_board){
     return to_return;
 }
 
-Move Pente_AI::narrow_random_ai(Board& the_board){
-    Move to_return;
+Move_t Pente_AI::narrow_random_ai(Board& the_board){
+    Move_t to_return;
     player the_player = the_board.get_player();
     int left, right, top, bottom;
 
@@ -49,13 +49,13 @@ Move Pente_AI::narrow_random_ai(Board& the_board){
     return to_return;
 }
 
-Move Pente_AI::simple_rules_ai(Board& the_board){
+Move_t Pente_AI::simple_rules_ai(Board& the_board){
 
     initialize_rules();
 
     //TODO: pick a move
 
-    Move to_return;
+    Move_t to_return;
 
     return to_return;
 }
@@ -114,11 +114,11 @@ void Pente_AI::decipher_line( char* buffer, int size){
 	int j = 0;
 	for( int i = 8 ; i >= 0 ; i--){
 	    if( buffer[i] == '?' || buffer[i] == 'X'){
-		to_add.white += pow( 2, j); //j to keep the power correct
+		to_add.white += (int)pow( (double)2, (double)j); //j to keep the power correct
 	    }
 
 	    if( buffer[i] == '?' || buffer[i] == 'B'){
-		to_add.black += pow( 2, j);
+		to_add.black += (int)pow( (double)2, (double)j);
 	    }
 
 	    //if( i == 4) i = 3; //This would bypass the # line, but I don't
@@ -163,4 +163,19 @@ void Pente_AI::decipher_line( char* buffer, int size){
 	rules[ priority_levels].push_back( to_add);
 	rules_in_line[ priority_levels]++;
     }
+}
+
+raw_pattern_t look_at_board( Board the_board, Move_t, int x, int y){
+  //Derection 0 is to the right, 1 is up right, 5 is down left, 7 is down right
+
+    raw_pattern_t to_return;
+    to_return.spot_on_board = "EEEEEEEE";
+
+    if( x == 0 && y == 0){
+	return to_return;
+    }
+
+//    to_return.spot_on_board[0] = the_board.get_spot( 
+
+    return to_return;
 }
