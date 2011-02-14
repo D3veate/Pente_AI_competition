@@ -1,3 +1,0 @@
-
-test.out : dummy.cpp Board.cpp Pente_Com.cpp Pente_AI.cpp
-	g++ -Wall -g test.cpp Board.cpp Pente_Com.cpp Pente_AI.cpp -o test.out
