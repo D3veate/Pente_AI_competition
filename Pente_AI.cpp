@@ -71,15 +71,43 @@ Move_t Pente_AI::narrow_random_ai(Board& the_board){
 Move_t Pente_AI::simple_rules_ai(Board& the_board){
 
     initialize_rules();
+
     int left, right, top, bottom;
     search_rectangle( the_board, left, right, top, bottom);
-    Pattern_Match** records; //Several unused ones here. 
+
+    vector< vector<Pattern_Match> > records;
+    for( int i = 0 ; i < 19 ; i++){
+
+	records.push_back( vector<Pattern_Match>() );
+	for( int j = 0 ; j < 19 ; j++){
+	    records[i].push_back( Pattern_Match( priority_levels));
+	}
+    } //TODO: use the clear() on these.
+
+    /*
+    Pattern_Match** records = new Pattern_Match*[19]; //Several unused ones here. 
+    for( int i = 0 ; i < 19 ; i++){
+	records[i] = new Pattern_Match[19]; //the new[] operator doesn't work either. Here, the progam
+					    //is trying to create the objects but doesn't have a constructor
+					    //match.
+	for( int j = 0 ; j < 19 ; j++){
+	    records[i][j] = new Pattern_Match( priority_levels);
+	}
+    }
+    //need a 2d-array of matches...
+    */
+
+    /*
+     * This code compiles: 
+
+    Pattern_Match** records;
     for( int i = 0 ; i < 19 ; i++){
 	for( int j = 0 ; j < 19 ; j++){
 	    records[i][j] = Pattern_Match( priority_levels); //warning: records may be uninitialized...
 	}
     }
-    //need a 2d-array of matches...
+    */
+
 
     for( int i = left ; i <= right ; i++){
 	for( int j = bottom ; j <= top ; j++){ //This part of the loop chooses the spot
@@ -92,7 +120,7 @@ Move_t Pente_AI::simple_rules_ai(Board& the_board){
 		continue;
 
 	    for( int p = -1 ; p <= 1 ; p++){
-		for( int q = -1 ; q <= 1 ; p++){ //these choose direction
+		for( int q = -1 ; q <= 1 ; q++){ //these choose direction
 
 		    if( p == 0 && q == 0) 
 			continue;
@@ -105,7 +133,6 @@ Move_t Pente_AI::simple_rules_ai(Board& the_board){
 	}
     }
 
-    //match to rules
     //pick best match
 
     //TODO: pick a move
