@@ -116,8 +116,9 @@ Move_t Pente_AI::simple_rules_ai(Board& the_board){
 	    possible_spot.x = i;
 	    possible_spot.y = j;
 
-	    if( the_board.get_spot( possible_spot) != EMPTY)
+	    if( the_board.get_spot( possible_spot) != EMPTY || !the_board.move_is_legal( the_board.get_player(), possible_spot)){
 		continue;
+	    }
 
 	    for( int p = -1 ; p <= 1 ; p++){
 		for( int q = -1 ; q <= 1 ; q++){ //these choose direction
@@ -133,11 +134,41 @@ Move_t Pente_AI::simple_rules_ai(Board& the_board){
 	}
     }
 
+    //ghetto... move this to a function call or merge with the above function.
+
+    Pattern_Match temp( priority_levels); //used as an initial comparison.
+					  //TODO: make sure that an actual match is found...
+    Move_t to_return;
+
+    for( int i = left ; i <= right ; i++){
+	for( int j = bottom ; j <= top ; j++){
+
+	    Move_t possible_spot;
+	    possible_spot.x = i;
+	    possible_spot.y = j;
+
+	    if( the_board.get_spot( possible_spot) != EMPTY || !the_board.move_is_legal( the_board.get_player(), possible_spot)){
+		continue;
+	    }
+
+	    for( int k = 0 ; k <= priority_levels ; k++){
+		if( temp.get_matches(k) <= records[i][j].get_matches(k)){
+		    temp = records[i][j]; //TODO:make a copy constructor?
+		    to_return.x = i;
+		    to_return.y = j;
+		    break;
+		}
+	    }
+	    //score...
+	}
+    }
+
+    //cerr << "x: " << to_return.x << " y: " << to_return.y << endl;
+
     //pick best match
 
     //TODO: pick a move
 
-    Move_t to_return;
     return to_return;
 }
 

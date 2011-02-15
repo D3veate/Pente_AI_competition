@@ -157,7 +157,7 @@ player parent_process(Board& the_board, int out_child_one[], int in_child_one[],
 	}
 	else{
 	    the_board.display(true); //Display the board using cerr
-	    cerr << "Illegal move ( " << the_board.get_player() << " ) " << " -- x: " << temp.x << " y: " << temp.y << endl;
+	    cerr << "Illegal move(a) ( " << the_board.get_player() << " ) " << " -- x: " << temp.x << " y: " << temp.y << endl;
 	}
     }
 
