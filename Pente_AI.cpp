@@ -7,12 +7,13 @@ Pattern_Match::Pattern_Match( int priority_levels_incoming)
     }
 }
 
+/*
 Pattern_Match::~Pattern_Match(){
     rule_matches.clear();
-}
+}*/
 
-void Pattern_Match::record_match( int priority_level){
-    rule_matches[ priority_level]++;
+void Pattern_Match::record_match( int priority_level_incoming){
+    ++rule_matches[ priority_level_incoming];
 }
 
 int Pattern_Match::get_matches( int priority_level){
@@ -205,7 +206,7 @@ void Pente_AI::decipher_line( char* buffer, int size){
 	rules.push_back( vector< pattern_t>());
 	priority_levels++;
 	rules_in_line.push_back( 0);
-	rules_in_line[ priority_levels] = 0;
+	rules_in_line[ priority_levels] = 0; //redundant?
     }
     else if( strncmp( buffer, "\0", 1) == 0){
 	//newline... do nothing
@@ -363,11 +364,14 @@ pattern_t Pente_AI::convert_from_raw( Board& the_board, raw_pattern_t raw){
 void Pente_AI::match_to_rule( Board& the_board, Pattern_Match& the_matches, pattern_t& the_pattern){
     for( int i = 0 ; i <= priority_levels ; i++){ //note, priority_levels and rules in line weren't constructed
 						  //in the same way
-	for( int j = 0 ; j < rules_in_line[ priority_levels] ; j++){
+	for( int j = 0 ; j < rules_in_line[ i] ; j++){
 	    if( (((the_pattern.white & rules[i][j].white) == the_pattern.white) && ((the_pattern.black & rules[i][j].black) == the_pattern.black))
 	     && (the_pattern.min_white_captures >= rules[i][j].min_white_captures && the_pattern.max_white_captures <= rules[i][j].max_white_captures)
 	     && (the_pattern.min_black_captures >= rules[i][j].min_black_captures && the_pattern.max_black_captures <= rules[i][j].max_black_captures)){
+	     //XXX: Major flaw. This and'ing logic doesn't produce the results I thought it did. 
 
+		cerr << "Matched this pattern: " << the_pattern.white << " : " << the_pattern.black << endl;
+		cerr << " with rule: " << i << " : " << j << " -- " << rules[i][j].white << " : " << rules[i][j].black << endl << endl;
 		the_matches.record_match(i);
 
 		return; //Early return because I don't want a particular pattern patch on a high priority to trigger all 

@@ -30,7 +30,7 @@ class Pattern_Match{
 	int priority_levels;
     public:
 	Pattern_Match( int);
-	~Pattern_Match();
+//	~Pattern_Match();
 	void record_match(int);
 	int get_matches(int);
 };
