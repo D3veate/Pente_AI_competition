@@ -69,9 +69,9 @@ Move_t Pente_AI::narrow_random_ai(Board& the_board){
     return to_return;
 }
 
-Move_t Pente_AI::simple_rules_ai(Board& the_board){
+Move_t Pente_AI::simple_rules_ai(Board& the_board, int rule_file_number){
 
-    initialize_rules();
+    initialize_rules( rule_file_number);
 
     int left, right, top, bottom;
     search_rectangle( the_board, left, right, top, bottom);
@@ -246,13 +246,13 @@ void Pente_AI::decipher_line( char* buffer, int size){
     }
     else if( strncmp( &buffer[4], "#", 1) == 0){
       //The lines look something like 
-      // E??B#WWB?03
+      // E??B#WWB?0324
       // which is deciphered as follows: 
       // E is empty, ? is anything (including empty), # is the
       // prospective move, W and B stand for colors of stones
-      // that must be there, the 0 is the min number of captures
-      // that this rule applies to, and 3 is the max number of captures
-      // the rule applies to. 
+      // that must be there, the 0 is the min number of white captures
+      // that this rule applies to, and 3 is the max number of white captures
+      // the rule applies to. 2 and 4 are the ranges of black captures
 
 	pattern_t to_add;
 	to_add.white = 0, to_add.black = 0, to_add.empty = 0;
@@ -407,6 +407,20 @@ pattern_t Pente_AI::convert_from_raw( Board& the_board, raw_pattern_t raw){
 	    default:
 		break;
 	}
+    }
+
+    if( the_board.get_player() == BLACK){
+	int temp_swap = to_return.white;
+	to_return.white = to_return.black;
+	to_return.black = temp_swap;
+
+	temp_swap = to_return.min_white_captures;
+	to_return.min_white_captures = to_return.min_black_captures;
+	to_return.min_black_captures = temp_swap;
+
+	temp_swap = to_return.max_white_captures;
+	to_return.max_white_captures = to_return.max_black_captures;
+	to_return.max_black_captures = temp_swap;
     }
 
     return to_return;

@@ -60,7 +60,7 @@ class Pente_AI{
 	  //left, right, top, bottom
 	Move_t random_ai(Board&);
 	Move_t narrow_random_ai(Board&);
-	Move_t simple_rules_ai(Board&);
+	Move_t simple_rules_ai(Board&, int = 0);
 };
 
 #endif

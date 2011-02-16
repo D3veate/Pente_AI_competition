@@ -48,6 +48,7 @@ class Board{
 
 	player get_player();
 	Move_t get_move(int);
+	  //int is index of move. last move is moves_made - 1
 };
 
 #endif
