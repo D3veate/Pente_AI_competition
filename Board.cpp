@@ -272,8 +272,8 @@ bool Board::is_game_over_helper(){
 		temp_x = moves[ moves_made - 1].x;
 		temp_y = moves[ moves_made - 1].y; //temp_x/y represent most recent moves
 
-		while(    ( i != 0 || j != 0) //make sure a valid direction is declared
-		       && (temp_x - i >= 0 && temp_x - i <= 18 && temp_y >= 0 && temp_y <= 18 ) //bounds check
+		while( ( i != 0 || j != 0) //make sure a valid direction is declared
+		       && (temp_x - i >= 0 && temp_x - i <= 18 && temp_y - j >= 0 && temp_y - j <= 18 ) //bounds check
 		       && (spot[ temp_x - i][ temp_y - j] == temp_player) ){
 		    temp_x -= i;
 		    temp_y -= j;

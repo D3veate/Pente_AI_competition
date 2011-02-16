@@ -2,7 +2,7 @@
 
 Pattern_Match::Pattern_Match( int priority_levels_incoming)
 	      :priority_levels( priority_levels_incoming){
-    for( int i = 0 ; i < priority_levels ; i++){
+    for( int i = 0 ; i <= priority_levels ; i++){
 	rule_matches.push_back(0);
     }
 }
@@ -130,8 +130,18 @@ Move_t Pente_AI::simple_rules_ai(Board& the_board){
 		    raw_pattern_t temp_raw = look_at_board( the_board, possible_spot, p, q);
 		    pattern_t temp_pattern = convert_from_raw( the_board, temp_raw);
 		    match_to_rule( the_board, records[i][j], temp_pattern);
+
 		}
 	    }
+
+	    /*
+	    cerr << endl << "the matches: i: " << i << " j: " << j << endl;
+
+	    for( int t = 0 ; t <= priority_levels ; t++){
+		cerr << "this " << t << ": " << records[i][j].get_matches(t) << endl;
+	    }
+	    */
+
 	}
     }
 
@@ -152,14 +162,37 @@ Move_t Pente_AI::simple_rules_ai(Board& the_board){
 		continue;
 	    }
 
+	    /*
+	    cerr << endl << "records[" << setw(2) << i << "][" << setw(2) << j << "]:";
+	    for( int t = 0 ; t <= priority_levels ; t++){
+		cerr << '\t' << records[i][j].get_matches(t);
+	    }
+
+	    cerr << endl << "\t\t temp:";
+	    for( int t = 0 ; t <= priority_levels ; t++){
+		cerr << '\t' << temp.get_matches(t);
+	    }
+
+	    if( i == 18 && j == 9){
+		cerr << "tag!";
+	    }
+	    */
+
 	    for( int k = 0 ; k <= priority_levels ; k++){
-		if( temp.get_matches(k) <= records[i][j].get_matches(k)){
+		if( temp.get_matches(k) < records[i][j].get_matches(k)){
+//		cerr << " k: " << k << " temp matches: " << temp.get_matches(k) << " records matches: " << records[i][j].get_matches(k) << endl;
+//		    cerr << "better match found! " << endl;
 		    temp = records[i][j]; //TODO:make a copy constructor?
 		    to_return.x = i;
 		    to_return.y = j;
+//		cerr << "++: " << temp.get_matches(k) << " : " << records[i][j].get_matches(k) << endl;
+		    break;
+		}
+		else if( temp.get_matches(k) > records[i][j].get_matches(k)){
 		    break;
 		}
 	    }
+//	    cerr << endl;
 	    //score...
 	}
     }
@@ -222,18 +255,25 @@ void Pente_AI::decipher_line( char* buffer, int size){
       // the rule applies to. 
 
 	pattern_t to_add;
-	to_add.white = 0, to_add.black = 0;
+	to_add.white = 0, to_add.black = 0, to_add.empty = 0;
 	to_add.min_white_captures = 0, to_add.max_white_captures = 0;
 	to_add.min_black_captures = 0, to_add.max_black_captures = 0;
 
 	int j = 0;
 	for( int i = 8 ; i >= 0 ; i--){
-	    if( buffer[i] == '?' || buffer[i] == 'W'){
-		to_add.white += (int)pow( (double)2, (double)j); //j to keep the power correct
-	    }
 
-	    if( buffer[i] == '?' || buffer[i] == 'B'){
-		to_add.black += (int)pow( (double)2, (double)j);
+	    switch( buffer[i]){
+		case 'E':
+		    to_add.empty += (int)pow( (double)2, (double)j);
+		    break;
+		case 'W':
+		    to_add.white += (int)pow( (double)2, (double)j); //j to keep the power correct
+		    break;
+		case 'B':
+		    to_add.black += (int)pow( (double)2, (double)j);
+		    break;
+		default:
+		    break;
 	    }
 
 	    //if( i == 4) i = 3; //This would bypass the # line, but I don't
@@ -257,6 +297,8 @@ void Pente_AI::decipher_line( char* buffer, int size){
 	rules[ priority_levels].push_back( to_add);
 	rules_in_line[ priority_levels]++;
     }
+
+    /*
     else if( strncmp( &buffer[3], ",", 1) == 0){
       //These lines are in the format
       // 123,456,1423
@@ -288,6 +330,7 @@ void Pente_AI::decipher_line( char* buffer, int size){
 	rules[ priority_levels].push_back( to_add);
 	rules_in_line[ priority_levels]++;
     }
+    */
 }
 
 raw_pattern_t Pente_AI::look_at_board( Board& the_board, Move_t potential_move, int x, int y){
@@ -345,16 +388,24 @@ pattern_t Pente_AI::convert_from_raw( Board& the_board, raw_pattern_t raw){
 
     to_return.white = 0;
     to_return.black = 0;
+    to_return.empty = 0;
 
     int current_pow;
     for( int i = 0 ; i < 8 ; i++){
 	current_pow = (int)pow( (double)2, (double)i);
 
-	if( raw.spot_on_board[i] == WHITE){
-	    to_return.white += current_pow;
-	}
-	else if( raw.spot_on_board[i] == BLACK){
-	    to_return.black += current_pow;
+	switch( raw.spot_on_board[i]){
+	    case BLACK:
+		to_return.black += current_pow;
+		break;
+	    case EMPTY:
+		to_return.empty += current_pow;
+		break;
+	    case WHITE:
+		to_return.white += current_pow;
+		break;
+	    default:
+		break;
 	}
     }
 
@@ -362,16 +413,25 @@ pattern_t Pente_AI::convert_from_raw( Board& the_board, raw_pattern_t raw){
 }
 
 void Pente_AI::match_to_rule( Board& the_board, Pattern_Match& the_matches, pattern_t& the_pattern){
+  //the_pattern is what was observed on the board, which is compared to rules, 
+  //a data member of the Pente_AI class.
+
     for( int i = 0 ; i <= priority_levels ; i++){ //note, priority_levels and rules in line weren't constructed
 						  //in the same way
 	for( int j = 0 ; j < rules_in_line[ i] ; j++){
-	    if( (((the_pattern.white & rules[i][j].white) == the_pattern.white) && ((the_pattern.black & rules[i][j].black) == the_pattern.black))
-	     && (the_pattern.min_white_captures >= rules[i][j].min_white_captures && the_pattern.max_white_captures <= rules[i][j].max_white_captures)
-	     && (the_pattern.min_black_captures >= rules[i][j].min_black_captures && the_pattern.max_black_captures <= rules[i][j].max_black_captures)){
-	     //XXX: Major flaw. This and'ing logic doesn't produce the results I thought it did. 
 
-		cerr << "Matched this pattern: " << the_pattern.white << " : " << the_pattern.black << endl;
-		cerr << " with rule: " << i << " : " << j << " -- " << rules[i][j].white << " : " << rules[i][j].black << endl << endl;
+//	    cerr << " temp: " << the_pattern.empty << " : " << rules[i][j].empty << " : " << (the_pattern.empty & rules[i][j].empty) << endl;
+
+	    if( ( (the_pattern.white & rules[i][j].white) == rules[i][j].white)
+	     && ( (the_pattern.black & rules[i][j].black) == rules[i][j].black)
+	     && ( (the_pattern.empty & rules[i][j].empty) == rules[i][j].empty)
+	     && (the_pattern.min_white_captures >= rules[i][j].min_white_captures)
+	     && (the_pattern.max_white_captures <= rules[i][j].max_white_captures)
+	     && (the_pattern.min_black_captures >= rules[i][j].min_black_captures)
+	     && (the_pattern.max_black_captures <= rules[i][j].max_black_captures) ){
+
+		//cerr << "Matched this pattern-- w: " << the_pattern.white << " b: " << the_pattern.black << " e: " << the_pattern.empty << endl;;
+		//cerr << " with rule: " << i << " : " << j << " -- w: " << rules[i][j].white << " b: " << rules[i][j].black << " e: " << rules[i][j].empty << endl << endl;
 		the_matches.record_match(i);
 
 		return; //Early return because I don't want a particular pattern patch on a high priority to trigger all 

@@ -14,6 +14,7 @@
 typedef struct pattern_t{
     int white;
     int black;
+    int empty;
     int min_white_captures;
     int max_white_captures;
     int min_black_captures;
